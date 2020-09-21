@@ -1,5 +1,7 @@
-package com.udacity.boogle.maps;
+package com.udacity.boogle.maps.controller;
 
+import com.udacity.boogle.maps.model.Address;
+import com.udacity.boogle.maps.repository.MockAddressRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

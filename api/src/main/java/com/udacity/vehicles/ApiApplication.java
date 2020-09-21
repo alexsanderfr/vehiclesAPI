@@ -18,10 +18,10 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @SpringBootApplication
 @EnableJpaAuditing
-public class VehiclesApiApplication {
+public class ApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(VehiclesApiApplication.class, args);
+        SpringApplication.run(ApiApplication.class, args);
     }
 
     /**

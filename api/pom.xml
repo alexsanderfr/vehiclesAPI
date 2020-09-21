@@ -10,9 +10,9 @@
         <relativePath/> <!-- lookup parent from com.udacity.pricing.repository -->
     </parent>
     <groupId>com.udacity</groupId>
-    <artifactId>vehicles-api</artifactId>
+    <artifactId>api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>vehicles-api</name>
+    <name>api</name>
     <description>A Restful API for vehicles</description>
 
     <properties>
