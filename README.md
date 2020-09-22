@@ -22,7 +22,7 @@ Run with Spring
 
 ## Authors
 
-* **Alexsander Franco** -  [Íalexsanderfr](https://github.com/alexsanderfr)
+* **Alexsander Franco** -  [alexsanderfr](https://github.com/alexsanderfr)
 
 ## Acknowledgments
 
