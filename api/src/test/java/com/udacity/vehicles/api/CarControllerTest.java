@@ -1,5 +1,6 @@
 package com.udacity.vehicles.api;
 
+import com.jayway.jsonpath.JsonPath;
 import com.udacity.vehicles.client.maps.MapsClient;
 import com.udacity.vehicles.client.prices.PriceClient;
 import com.udacity.vehicles.domain.Condition;
@@ -20,13 +21,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.URI;
 import java.util.Collections;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -73,8 +76,9 @@ public class CarControllerTest {
     @Test
     public void createCar() throws Exception {
         Car car = getCar();
+        URI createUri = URI.create("/cars");
         mvc.perform(
-                post(URI.create("/cars"))
+                post(createUri)
                         .content(json.write(car).getJson())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -88,12 +92,24 @@ public class CarControllerTest {
      */
     @Test
     public void listCars() throws Exception {
-        /**
-         * TODO: Add a test to check that the `get` method works by calling
-         *   the whole list of vehicles. This should utilize the car from `getCar()`
-         *   below (the vehicle will be the first in the list).
-         */
+        Car car = getCar();
+        URI createUri = URI.create("/cars");
+        MvcResult createResult = mvc.perform(
+                post(createUri)
+                        .content(json.write(car).getJson())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated()).andReturn();
+        Integer id = JsonPath.read(createResult.getResponse().getContentAsString(), "$.id");
 
+        URI listUri = URI.create("/cars");
+        MvcResult listResult = mvc.perform(
+                get(listUri)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().is2xxSuccessful()).andReturn();
+
+        Integer idFromList = JsonPath.read(listResult.getResponse().getContentAsString(), "$._embedded.carList[0].id");
+        assertEquals(id, idFromList);
     }
 
     /**
@@ -103,10 +119,20 @@ public class CarControllerTest {
      */
     @Test
     public void findCar() throws Exception {
-        /**
-         * TODO: Add a test to check that the `get` method works by calling
-         *   a vehicle by ID. This should utilize the car from `getCar()` below.
-         */
+        Car car = getCar();
+        URI createUri = URI.create("/cars");
+        MvcResult result = mvc.perform(
+                post(createUri)
+                        .content(json.write(car).getJson())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated()).andReturn();
+        Integer id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+        URI findUri = URI.create("/cars/" + id);
+        mvc.perform(
+                get(findUri)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().is2xxSuccessful());
     }
 
     /**
@@ -116,11 +142,20 @@ public class CarControllerTest {
      */
     @Test
     public void deleteCar() throws Exception {
-        /**
-         * TODO: Add a test to check whether a vehicle is appropriately deleted
-         *   when the `delete` method is called from the Car Controller. This
-         *   should utilize the car from `getCar()` below.
-         */
+        Car car = getCar();
+        URI createUri = URI.create("/cars");
+        MvcResult result = mvc.perform(
+                post(createUri)
+                        .content(json.write(car).getJson())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated()).andReturn();
+        Integer id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+        URI deleteUri = URI.create("/cars/" + id);
+        mvc.perform(
+                delete(deleteUri)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNoContent());
     }
 
     /**
