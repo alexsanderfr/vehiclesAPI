@@ -5,17 +5,12 @@ import com.udacity.vehicles.client.prices.Price;
 import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Locale;
-
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 /**
  * Implements the car service create, read, update or delete
@@ -55,7 +50,8 @@ public class CarService {
         if (id != null) {
             Car car = repository.findById(id).orElseThrow(CarNotFoundException::new);
             Flux<Price> priceResponse = pricingClient.get().uri(uriBuilder -> uriBuilder
-                    .path("/{id}")
+                    .path("/services/price")
+                    .queryParam("vehicleId", id)
                     .build(id)).retrieve().bodyToFlux(Price.class);
             Price price = priceResponse.blockFirst();
             if (price != null) {
@@ -65,6 +61,7 @@ public class CarService {
             Double lat = car.getLocation().getLat();
             Double lon = car.getLocation().getLon();
             Flux<Address> mapsResponse = mapsClient.get().uri(uriBuilder -> uriBuilder
+                    .path("/maps")
                     .queryParam("lat", lat)
                     .queryParam("lon", lon)
                     .build()).retrieve().bodyToFlux(Address.class);
