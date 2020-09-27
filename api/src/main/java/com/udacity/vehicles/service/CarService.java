@@ -55,7 +55,7 @@ public class CarService {
                     .build(id)).retrieve().bodyToFlux(Price.class);
             Price price = priceResponse.blockFirst();
             if (price != null) {
-                car.setPrice(price.getPrice().toString());
+                car.setPrice(price.getPrice().toString() + price.getCurrency());
             }
 
             Double lat = car.getLocation().getLat();
@@ -71,6 +71,7 @@ public class CarService {
                 location.setAddress(address.getAddress());
                 location.setCity(address.getCity());
                 location.setState(address.getState());
+                location.setZip(address.getZip());
             }
             return car;
 
