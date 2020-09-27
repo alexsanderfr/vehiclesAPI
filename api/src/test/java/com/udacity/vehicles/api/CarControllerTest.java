@@ -1,8 +1,6 @@
 package com.udacity.vehicles.api;
 
 import com.jayway.jsonpath.JsonPath;
-import com.udacity.vehicles.client.maps.MapsClient;
-import com.udacity.vehicles.client.prices.PriceClient;
 import com.udacity.vehicles.domain.Condition;
 import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
@@ -44,17 +42,12 @@ public class CarControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private JacksonTester<Car> json;
 
     @MockBean
     private CarService carService;
-
-    @MockBean
-    private PriceClient priceClient;
-
-    @MockBean
-    private MapsClient mapsClient;
 
     /**
      * Creates pre-requisites for testing, such as an example car.
