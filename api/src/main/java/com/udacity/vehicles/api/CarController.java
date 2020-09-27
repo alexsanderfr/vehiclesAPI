@@ -25,11 +25,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 
 /**
  * Implements a REST-based controller for the Vehicles API.
  */
 @RestController
+@ApiResponses(value = {
+        @ApiResponse(code=400, message = "This is a bad request, please follow the API documentation for the proper request format."),
+        @ApiResponse(code=401, message = "Due to security constraints, your access request cannot be authorized. "),
+        @ApiResponse(code=500, message = "The server is down.")
+})
 @RequestMapping("/cars")
 class CarController {
 
