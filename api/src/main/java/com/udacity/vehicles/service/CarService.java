@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -90,12 +91,18 @@ public class CarService {
             return repository.findById(car.getId())
                     .map(carToBeUpdated -> {
                         carToBeUpdated.setDetails(car.getDetails());
+                        carToBeUpdated.setCondition(car.getCondition());
+                        carToBeUpdated.setPrice(car.getPrice());
                         carToBeUpdated.setLocation(car.getLocation());
+                        carToBeUpdated.setCreatedAt(car.getCreatedAt());
+                        carToBeUpdated.setModifiedAt(LocalDateTime.now());
                         return repository.save(carToBeUpdated);
                     }).orElseThrow(CarNotFoundException::new);
+        } else {
+            car.setCreatedAt(LocalDateTime.now());
+            car.setModifiedAt(LocalDateTime.now());
+            return repository.save(car);
         }
-
-        return repository.save(car);
     }
 
     /**
